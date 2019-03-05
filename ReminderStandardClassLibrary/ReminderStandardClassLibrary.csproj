@@ -6,6 +6,8 @@
     <Authors>musictopia</Authors>
     <Description>View Models For Doing Reminder Apps</Description>
     <PackageTags>reminders viewmodels mvvm</PackageTags>
+    <PackageProjectUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
