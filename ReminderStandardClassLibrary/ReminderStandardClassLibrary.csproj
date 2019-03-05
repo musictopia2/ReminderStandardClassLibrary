@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="CommonBasicStandardLibraries">
+      <HintPath>C:\VS\Standard2.0\General\CommonBasicStandardLibraries\CommonBasicStandardLibraries\bin\Release\netstandard2.0\CommonBasicStandardLibraries.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations">
+      <HintPath>C:\VS\Standard2.0\Nuget\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
