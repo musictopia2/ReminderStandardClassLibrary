@@ -1,5 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.1</LangVersion>
@@ -8,10 +8,9 @@
     <PackageTags>reminders viewmodels mvvm</PackageTags>
     <PackageProjectUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</RepositoryUrl>
+    <Version>1.0.2</Version>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="CommonBasicStandardLibraries" Version="1.0.17" />
+    <PackageReference Include="CommonBasicStandardLibraries" Version="1.0.35" />
   </ItemGroup>
-
 </Project>

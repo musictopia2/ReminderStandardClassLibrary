@@ -14,6 +14,8 @@ using System.Linq;
 using CommonBasicStandardLibraries.BasicDataSettingsAndProcesses;
 using static CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions.ListsExtensions;
 using static CommonBasicStandardLibraries.MVVMHelpers.Command;
+using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
+
 namespace ReminderStandardClassLibrary.GeneralViewModels
 {
 	public class BasicDesktopReminderViewModel : BaseReminderViewModel
@@ -160,42 +162,47 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			}
 		}
 
-		public BasicDesktopReminderViewModel()
-		{
-			Title = "Simple Reminder (Version 4)";
+        private void StartFirst()
+        {
+            Title = "Simple Reminder (Version 4)";
 
+
+
+            RemoveAppointmentCommand = new Command(async x =>
+            {
+                //IsBusy = true;
+                AppointmentList.RemoveSpecificItem(SelectedItem);
+                SelectedItem = null;
+                UIWindow.NewContentForCombo();
+                await SaveResume();
+                //IsBusy = false;
+                ComboText = "";
+                RefreshReminderList();
+                UIWindow.FocusOnFirstControl();
+            },
+            x =>
+            {
+                //if (IsBusy == true)
+                //	return false;
+                return !(SelectedItem == null);
+
+            }, this);
+
+            FocusComboCommand = new Command(x =>
+            {
+                UIWindow.FocusOnCombo();
+            }, x =>
+            {
+                return true;
+            }, this);
+        }
+
+		//public BasicDesktopReminderViewModel()
+		//{
 			
 
-			RemoveAppointmentCommand = new Command(async x =>
-			{
-				//IsBusy = true;
-				AppointmentList.RemoveSpecificItem(SelectedItem);
-				SelectedItem = null;
-				UIWindow.NewContentForCombo();
-				await SaveResume();
-				//IsBusy = false;
-				ComboText = "";
-				RefreshReminderList();
-				UIWindow.FocusOnFirstControl();
-			},
-			x =>
-			{
-				//if (IsBusy == true)
-				//	return false;
-				return !(SelectedItem == null);
 
-			}, this);
-
-			FocusComboCommand = new Command(x =>
-			{
-				UIWindow.FocusOnCombo();
-			}, x =>
-			{
-				return true;
-			}, this);
-
-
-		}
+		//}
 
 		private void RunMinuteConstantTask()
 		{
@@ -367,7 +374,12 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 		private string WeeklyPath = "";
 		private string SpecificPath = "";
 
-		private void GetPaths()
+        public BasicDesktopReminderViewModel(IFocusOnFirst TempFocus) : base(TempFocus)
+        {
+            StartFirst();
+        }
+
+        private void GetPaths()
 		{
 			IReminderPaths Temps = cons.Resolve<IReminderPaths>();
 			if (Temps != null)

@@ -6,9 +6,11 @@ using CommonBasicStandardLibraries.CollectionClasses;
 using ReminderStandardClassLibrary.Interfaces;
 using System.Threading.Tasks;
 using System.Threading;
+using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
+
 namespace ReminderStandardClassLibrary.GeneralViewModels
 {
-	public abstract class BaseReminderViewModel : TimeViewModel
+	public abstract class BaseReminderViewModel : TimeViewModel //i don't think it should open by itself.  intended to use dependency injection engine to resolve it.
 	{
 		IProgress<int> SecondProgress;
 		protected IView CurrentView;
@@ -16,7 +18,9 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		private bool _IsDisabled;
 
-		public bool IsDisabled
+        public BaseReminderViewModel(IFocusOnFirst TempFocus) : base(TempFocus) { }
+
+        public bool IsDisabled
 		{
 			get { return _IsDisabled; }
 			set

@@ -12,10 +12,13 @@ using static CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.F
 using static CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
 using System.Linq;
 using CommonBasicStandardLibraries.BasicDataSettingsAndProcesses;
+using CommonBasicStandardLibraries.Exceptions;
 using static CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions.ListsExtensions;
+using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
+
 namespace ReminderStandardClassLibrary.GeneralViewModels
 {
-	public abstract  class RepeaterReminderViewModel<T> : BaseReminderViewModel where T:IReminderBasicData
+	public abstract class RepeaterReminderViewModel : BaseReminderViewModel
 	{
 		protected abstract int HowManyCycles();
 		protected BaseReminderClass RepeatData = new BaseReminderClass();
@@ -25,32 +28,47 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		private string _NextDisplayDate;
 
-		protected T CustomReminderBehavior;
+		private readonly IReminderBasicData CustomReminderBehavior; //hopefully this will work.  can cast it if necessary.
+        //looks like i have to make it private.
 
 
-		public RepeaterReminderViewModel(T _Behave)
-		{	CustomReminderBehavior = _Behave;
-			StartNew();
-			Title = CustomReminderBehavior.Title;
-			StartReminderCommand = new Command( x =>
-			{
-				StartNextCycle();
-			}, x =>
-			{
-				return CanStartReminder();
-			}, this);
+        public RepeaterReminderViewModel(IFocusOnFirst TempFocus, IReminderBasicData TempRemind) : base(TempFocus)
+        {
+            CustomReminderBehavior = TempRemind;
+            StartFirst();
+        }
 
-			ContinueReminderCommand = new Command(x =>
-			{
-				StartNextCycle();
-			}, x =>
-			{
-				if (RepeatData.ReminderStatus == EnumReminderStatus.WaitingForUser)
-					return true;
-				else
-					return false;
-			}, this);
-		}
+        private void StartFirst()
+        {
+
+            if (CustomReminderBehavior == null)
+                throw new BasicBlankException("You never sent in the custom reminder behavior.  Should have used dependency injection instead of generics");
+            //CustomReminderBehavior = _Behave;
+            StartNew();
+            Title = CustomReminderBehavior.Title;
+            StartReminderCommand = new Command(x =>
+            {
+                StartNextCycle();
+            }, x =>
+            {
+                return CanStartReminder();
+            }, this);
+
+            ContinueReminderCommand = new Command(x =>
+            {
+                StartNextCycle();
+            }, x =>
+            {
+                if (RepeatData.ReminderStatus == EnumReminderStatus.WaitingForUser)
+                    return true;
+                else
+                    return false;
+            }, this);
+        }
+
+		//public RepeaterReminderViewModel(T _Behave)
+		//{	
+		//}
 
 		protected virtual void StartNew() { }
 
@@ -80,13 +98,14 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		public string ContinueText { get => CustomReminderBehavior.ContinueText; }
 		
-		private void StartReminderProcess()
-		{
-			if (RepeatData.ReminderStatus == EnumReminderStatus.None)
-				ClearReminderData();
-			else if (RepeatData.ReminderStatus == EnumReminderStatus.WaitingForReminder)
-				WaitForReminder();
-		}
+        //maybe we don't need it  if i am wrong, rethink
+		//private void StartReminderProcess()
+		//{
+		//	if (RepeatData.ReminderStatus == EnumReminderStatus.None)
+		//		ClearReminderData();
+		//	else if (RepeatData.ReminderStatus == EnumReminderStatus.WaitingForReminder)
+		//		WaitForReminder();
+		//}
 
 		protected virtual bool NeedsToWaitForUserInputForNextReminder()
 		{

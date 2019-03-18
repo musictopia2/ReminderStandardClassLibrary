@@ -4,19 +4,26 @@ using System.Text;
 using ReminderStandardClassLibrary.DataClasses;
 using ReminderStandardClassLibrary.Interfaces;
 using CommonBasicStandardLibraries.CollectionClasses;
+using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
+
 namespace ReminderStandardClassLibrary.GeneralViewModels
 {
-	public class VariableRepeatableReminderViewModel : RepeaterReminderViewModel<IReminderVariableData>
+	public class VariableRepeatableReminderViewModel: RepeaterReminderViewModel //: RepeaterReminderViewModel<IReminderVariableData>
 	{
+        public VariableRepeatableReminderViewModel(IFocusOnFirst TempFocus, IReminderBasicData TempRemind) : base(TempFocus, TempRemind)
+        {
+            CustomReminderBehavior = (IReminderVariableData)TempRemind;
+        }
+        private readonly IReminderVariableData CustomReminderBehavior;
 
-		//private readonly CustomBasicList<VariableCycleClass> VariableList;
+        //private readonly CustomBasicList<VariableCycleClass> VariableList;
 
-		public VariableRepeatableReminderViewModel(IReminderVariableData _Behave) : base(_Behave)
-		{
-			//VariableList = CustomReminderBehavior.GetVariableList();
-		}
+        //public VariableRepeatableReminderViewModel(IReminderVariableData _Behave) : base(_Behave)
+        //{
+        //	//VariableList = CustomReminderBehavior.GetVariableList();
+        //}
 
-		protected override VariableCycleClass GetNextReminderDuration()
+        protected override VariableCycleClass GetNextReminderDuration()
 		{
 			var ThisList = CustomReminderBehavior.GetVariableList(); //it has to do at runtime.
 			//because there can be an implementation that would vary depending on what is selected.
