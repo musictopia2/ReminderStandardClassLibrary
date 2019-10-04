@@ -8,9 +8,9 @@
     <PackageTags>reminders viewmodels mvvm</PackageTags>
     <PackageProjectUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</RepositoryUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommonBasicStandardLibraries" Version="1.0.35" />
+    <PackageReference Include="CommonBasicStandardLibraries" Version="1.0.80" />
   </ItemGroup>
 </Project>

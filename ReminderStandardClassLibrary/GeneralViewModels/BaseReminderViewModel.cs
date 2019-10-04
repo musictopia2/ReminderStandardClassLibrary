@@ -77,10 +77,6 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			{
 				if (SetProperty(ref _PopUpVisible, value, onChanged: PopUpChange))
 				{
-					if (value == false)
-					{
-						
-					}
 				}
 
 			}
@@ -88,6 +84,8 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		private async void PopUpChange() //i think
 		{
+            if (PopUpVisible == false)
+                return; //maybe this way.
 			if (ShowSounds == true)
 				CurrentPopUp.StopPlay();
 			TimeSpan? ThisSpan = CurrentPopUp.HowLongToDelay();

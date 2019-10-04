@@ -29,10 +29,9 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 		{
 			get
 			{
-				return null; //for now.
+                return AppointmentList.Where(items => items.AppointmentMode == EnumAppointmentMode.Manuel).OrderBy(items => items.TotalSeconds).ToCustomBasicList();
 			}
 		}
-
 		public DesktopAppointmentData SelectedItem
 		{
 			get { return _SelectedItem; }
@@ -139,8 +138,11 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			await SaveResume();
 			RefreshReminderList();
 
-			ClearPropertiesWithAttributes();
-
+            //once i know what to clear, then has to do a different way (new attribute for this).
+            //ClearPropertiesWithAttributes();
+            //there are 2 things to clear out.
+            TimeString = "";
+            ReminderMessage = "";
 			RaiseFinish(); //will set isbusy to false and notify to set focus back on expected text
 		}
 
@@ -274,7 +276,7 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 				return;
 			CustomBasicList<WeeklyReminderClass> ThisList = await RetrieveSavedObjectAsync<CustomBasicList<WeeklyReminderClass>>(WeeklyPath);
 			AppointmentList.RemoveAllOnly(y => y.AppointmentMode == EnumAppointmentMode.Weekly); //this will remove all the weekly ones from the appointment list
-			ThisList.ForEach(async ThisItem =>
+			ThisList.ForEach(ThisItem =>
 			{
 				DesktopAppointmentData ThisAppointment = new DesktopAppointmentData()
 				{
@@ -288,7 +290,7 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 					x++;
 					if (CurrentDate.DayOfWeek == ThisItem.DayOfWeek)
 					{
-						NextDate = new DateTime(CurrentDate.Year, CurrentDate.Month, CurrentDate.Day, CurrentDate.Hour, CurrentDate.Minute, 0);
+						NextDate = new DateTime(CurrentDate.Year, CurrentDate.Month, CurrentDate.Day, ThisItem.Hour, ThisItem.Minute, 0);
 						if (CurrentDate > NextDate && x == 1)
 							NextDate = NextDate.AddDays(7);
 						break;
@@ -301,10 +303,11 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 				ThisAppointment.Title = "Weekly Appointment";
 				AppointmentList.Add(ThisAppointment);
 				OnPropertyChanged(nameof(ManuelList));
-				await SaveResume();
+				
 			}
 			);
-			RefreshReminderList();
+            await SaveResume(); //try to save after finished
+            RefreshReminderList();
 			HiddenBusy = false;
 		}
 
