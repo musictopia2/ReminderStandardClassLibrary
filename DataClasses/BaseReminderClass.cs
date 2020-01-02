@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommonBasicStandardLibraries.MVVMHelpers;
-using CommonBasicStandardLibraries.CollectionClasses;
+﻿using CommonBasicStandardLibraries.MVVMHelpers;
 using ReminderStandardClassLibrary.GeneralViewModels;
+using System;
 namespace ReminderStandardClassLibrary.DataClasses
 {
 	public class BaseReminderClass : ObservableObject
 	{
-		private EnumReminderStatus _ReminderStatus = EnumReminderStatus.None;
+		private EnumReminderStatus _reminderStatus = EnumReminderStatus.None;
 
 		public EnumReminderStatus ReminderStatus
 		{
-			get { return _ReminderStatus; }
+			get { return _reminderStatus; }
 			set
 			{
-				if (SetProperty(ref _ReminderStatus, value))
+				if (SetProperty(ref _reminderStatus, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -23,14 +20,14 @@ namespace ReminderStandardClassLibrary.DataClasses
 			}
 		}
 
-		private int _UpTo;
+		private int _upTo;
 
 		public int UpTo
 		{
-			get { return _UpTo; }
+			get { return _upTo; }
 			set
 			{
-				if (SetProperty(ref _UpTo, value))
+				if (SetProperty(ref _upTo, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -38,14 +35,14 @@ namespace ReminderStandardClassLibrary.DataClasses
 			}
 		}
 
-		private DateTime? _TimeStarted;
+		private DateTime? _timeStarted;
 
 		public DateTime? TimeStarted
 		{
-			get { return _TimeStarted; }
+			get { return _timeStarted; }
 			set
 			{
-				if (SetProperty(ref _TimeStarted, value))
+				if (SetProperty(ref _timeStarted, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -53,14 +50,14 @@ namespace ReminderStandardClassLibrary.DataClasses
 			}
 		}
 
-		private DateTime? _TimeEnded;
+		private DateTime? _timeEnded;
 
 		public DateTime? TimeEnded
 		{
-			get { return _TimeEnded; }
+			get { return _timeEnded; }
 			set
 			{
-				if (SetProperty(ref _TimeEnded, value))
+				if (SetProperty(ref _timeEnded, value))
 				{
 					//can decide what to do when property changes
 				}

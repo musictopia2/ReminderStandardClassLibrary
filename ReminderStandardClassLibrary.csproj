@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.1</LangVersion>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
     <Authors>musictopia</Authors>
+	<Nullable>enable</Nullable>
     <Description>View Models For Doing Reminder Apps</Description>
     <PackageTags>reminders viewmodels mvvm</PackageTags>
     <PackageProjectUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</RepositoryUrl>
-    <Version>1.0.5</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommonBasicStandardLibraries" Version="1.0.80" />
+    <PackageReference Include="CommonBasicStandardLibraries" Version="2.0.0" />
   </ItemGroup>
 </Project>

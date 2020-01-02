@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
 using CommonBasicStandardLibraries.MVVMHelpers.SpecializedViewModels;
-using CommonBasicStandardLibraries.CollectionClasses;
 using ReminderStandardClassLibrary.Interfaces;
-using System.Threading.Tasks;
+using System;
 using System.Threading;
-using CommonBasicStandardLibraries.MVVMHelpers.Interfaces;
-
+using System.Threading.Tasks;
 namespace ReminderStandardClassLibrary.GeneralViewModels
 {
 	public abstract class BaseReminderViewModel : TimeViewModel //i don't think it should open by itself.  intended to use dependency injection engine to resolve it.
 	{
-		IProgress<int> SecondProgress;
-		protected IView CurrentView;
-		private IPopUp CurrentPopUp;
-
-		private bool _IsDisabled;
-
-        public BaseReminderViewModel(IFocusOnFirst TempFocus) : base(TempFocus) { }
-
-        public bool IsDisabled
+		IProgress<int>? _secondProgress;
+		protected IView? CurrentView;
+		private IPopUp? _currentPopUp;
+		private bool _isDisabled;
+		public bool IsDisabled
 		{
-			get { return _IsDisabled; }
+			get { return _isDisabled; }
 			set
 			{
-				if (SetProperty(ref _IsDisabled, value))
+				if (SetProperty(ref _isDisabled, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -33,14 +25,13 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			}
 		}
 
-		private bool _ShowSounds = true; //can have a choice of whether it will show sounds or not.   default to true
-
+		private bool _showSounds = true; //can have a choice of whether it will show sounds or not.   default to true
 		public bool ShowSounds
 		{
-			get { return _ShowSounds; }
+			get { return _showSounds; }
 			set
 			{
-				if (SetProperty(ref _ShowSounds, value))
+				if (SetProperty(ref _showSounds, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -50,17 +41,17 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		protected bool HiddenBusy { get; set; }
 		protected bool ReminderBusy { get; set; }
-		public static  bool IsTesting { get; set; } //try to make it here.
+		public static bool IsTesting { get; set; } //try to make it here.
 		protected bool WaitingForUser { get; set; }
 
-		private int _HowOftenToRepeat = 6; //this is the sounds part
+		private int _howOftenToRepeat = 6; //this is the sounds part
 
 		public int HowOftenToRepeat
 		{
-			get { return _HowOftenToRepeat; }
+			get { return _howOftenToRepeat; }
 			set
 			{
-				if (SetProperty(ref _HowOftenToRepeat, value))
+				if (SetProperty(ref _howOftenToRepeat, value))
 				{
 					//can decide what to do when property changes
 				}
@@ -68,14 +59,18 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			}
 		}
 
-		private bool _PopUpVisible;
+		private bool _popUpVisible;
+
+		public BaseReminderViewModel(IFocusOnFirst tempFocus, ISimpleUI tempUI) : base(tempFocus, tempUI)
+		{
+		}
 
 		public bool PopUpVisible
 		{
-			get { return _PopUpVisible; }
+			get { return _popUpVisible; }
 			set
 			{
-				if (SetProperty(ref _PopUpVisible, value, onChanged: PopUpChange))
+				if (SetProperty(ref _popUpVisible, value, onChanged: PopUpChange))
 				{
 				}
 
@@ -84,15 +79,15 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 
 		private async void PopUpChange() //i think
 		{
-            if (PopUpVisible == false)
-                return; //maybe this way.
+			if (PopUpVisible == false)
+				return; //maybe this way.
 			if (ShowSounds == true)
-				CurrentPopUp.StopPlay();
-			TimeSpan? ThisSpan = CurrentPopUp.HowLongToDelay();
-			CurrentPopUp.ClosePopUp();
-			CurrentPopUp = null;
-			if (ThisSpan.HasValue == true)
-				Snooze(ThisSpan.Value);
+				_currentPopUp!.StopPlay();
+			TimeSpan? thisSpan = _currentPopUp!.HowLongToDelay();
+			_currentPopUp.ClosePopUp();
+			_currentPopUp = null;
+			if (thisSpan.HasValue == true)
+				Snooze(thisSpan!.Value);
 			else
 				await AfterReminderClosedOut(); //this has to run before it can do the other part.
 
@@ -106,14 +101,14 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 				do
 				{
 					Thread.Sleep(1000);
-					SecondProgress.Report(0);
+					_secondProgress!.Report(0);
 				} while (true);
 			});
 		}
 
-		public virtual void Init(IView _View)
+		public virtual Task InitAsync(IView view)
 		{
-			SecondProgress = new Progress<int>(x =>
+			_secondProgress = new Progress<int>(x =>
 			{
 				if (IsDisabled == true || ReminderBusy == true || WaitingForUser == true || PopUpVisible == true)
 					return;
@@ -123,7 +118,8 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			}
 			);
 			RunSecondConstantTask();
-			CurrentView = _View;
+			CurrentView = view;
+			return Task.CompletedTask;
 		}
 
 		public void ManuallyClosePopUp()
@@ -134,13 +130,13 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 		protected abstract void CheckReminders();
 
 
-		protected void ShowReminder(string Title, string Message)
+		protected void ShowReminder(string title, string message)
 		{
 			PopUpVisible = true;
-			CurrentPopUp = CurrentView.GeneratePopUpReminder();
-			CurrentPopUp.Load(Title, Message);
+			_currentPopUp = CurrentView!.GeneratePopUpReminder();
+			_currentPopUp.Load(title, message);
 			if (ShowSounds == true)
-				CurrentPopUp.PlaySound(HowOftenToRepeat);
+				_currentPopUp.PlaySound(HowOftenToRepeat);
 			MoniterReminder();
 		}
 
@@ -151,12 +147,12 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 				do
 				{
 					Thread.Sleep(100);
-					if (CurrentPopUp.IsLoaded() == false)
+					if (_currentPopUp!.IsLoaded() == false)
 						break;
 
 				} while (true);
 			});
-			if (CurrentPopUp.IsLoaded() == true)
+			if (_currentPopUp!.IsLoaded() == true)
 			{
 				ThisMessage.ShowError("Can't be loaded");
 				return;
@@ -164,7 +160,7 @@ namespace ReminderStandardClassLibrary.GeneralViewModels
 			PopUpVisible = false;
 		}
 
-		protected virtual void Snooze(TimeSpan ThisTime)
+		protected virtual void Snooze(TimeSpan thisTime)
 		{
 			//default with doing nothing.
 		}
