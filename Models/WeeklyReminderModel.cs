@@ -1,7 +1,7 @@
 ﻿using System;
-namespace ReminderStandardClassLibrary.DataClasses
+namespace ReminderStandardClassLibrary.Models
 {
-	public class WeeklyReminderClass
+	public class WeeklyReminderModel
 	{
 		public DayOfWeek DayOfWeek { get; set; }
 		public int Hour { get; set; }

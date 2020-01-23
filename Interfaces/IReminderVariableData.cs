@@ -1,9 +1,10 @@
 ﻿using CommonBasicStandardLibraries.CollectionClasses;
-using ReminderStandardClassLibrary.DataClasses;
+using ReminderStandardClassLibrary.Models;
+
 namespace ReminderStandardClassLibrary.Interfaces
 {
-    public interface IReminderVariableData : IReminderBasicData
+	public interface IReminderVariableData : IReminderBasicData
 	{
-		CustomBasicList<VariableCycleClass> GetVariableList();
+		CustomBasicList<VariableCycleModel> GetVariableList();
 	}
 }

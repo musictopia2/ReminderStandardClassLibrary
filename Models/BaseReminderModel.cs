@@ -1,9 +1,9 @@
-﻿using CommonBasicStandardLibraries.MVVMHelpers;
+﻿using CommonBasicStandardLibraries.MVVMFramework.ViewModels;
 using ReminderStandardClassLibrary.GeneralViewModels;
 using System;
-namespace ReminderStandardClassLibrary.DataClasses
+namespace ReminderStandardClassLibrary.Models
 {
-	public class BaseReminderClass : ObservableObject
+	public class BaseReminderModel : ObservableObject
 	{
 		private EnumReminderStatus _reminderStatus = EnumReminderStatus.None;
 
@@ -65,7 +65,7 @@ namespace ReminderStandardClassLibrary.DataClasses
 			}
 		}
 
-		public VariableCycleClass Currentreminder { get; set; } = new VariableCycleClass();
+		public VariableCycleModel Currentreminder { get; set; } = new VariableCycleModel();
 
 	}
 }
