@@ -14,8 +14,8 @@ namespace ReminderStandardClassLibrary.Logic
         {
             MainReminderProcesses.AddReminder(this);
         }
-        public bool ShowSounds { get; set; }
-        public int HowOftenToRepeat { get; set; }
+        public bool ShowSounds { get; set; } = true; //default is true.
+        public int HowOftenToRepeat { get; set; } = 10;
         public DateTime? NextDate { get; private set; }
         protected bool Snoozing = false;
         private ReminderModel? _nextReminder;
@@ -41,17 +41,21 @@ namespace ReminderStandardClassLibrary.Logic
         //protected abstract Task CheckListsAsync();
 
 
-        protected abstract Task<ReminderModel> GetNextReminderAsync();
+        protected abstract Task<ReminderModel?> GetNextReminderAsync();
 
         //this means if i need something else, can do.
         //hopefully i don't regret the part for next reminder.
         //if so, rethinking may be required.
         //or could allow it to be protected so other processes can do something else if needed.
         //not sure yet though.
+
+
+
         public virtual async Task<(bool needsReminder, string title, string message)> GetReminderInfoAsync(DateTime currentDate)
         {
             if (Snoozing == false)
             {
+                //_nextReminder = null;
                 _nextReminder = await GetNextReminderAsync();
                 if (_nextReminder == null)
                 {
@@ -73,12 +77,17 @@ namespace ReminderStandardClassLibrary.Logic
                     throw new BasicBlankException("Next date cannot be null when snoozing.  Rethink");
                 }
             }
-            if (currentDate >= NextDate)
+            if (_nextReminder !=null && currentDate >= NextDate)
             {
                 return (true, _nextReminder.Title, _nextReminder.Message);
             }
             return (false, "", "");
 
+        }
+
+        public virtual Task ProcessedReminderAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using CommonBasicStandardLibraries.CollectionClasses;
+using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System.Threading.Tasks;
 namespace ReminderStandardClassLibrary.DataAccess
 {
-    public interface ISimpleWeeklyDataAccess
+    public interface ISimpleWeeklyDataAccess : IProcessedReminder
     {
 
 
@@ -11,6 +12,7 @@ namespace ReminderStandardClassLibrary.DataAccess
 
         //i think this could be good.
         public Task<ReminderModel>? GetNextWeeklyReminderAsync();
+
 
         //public Task<CustomBasicList<WeeklyReminderClass>> GetWeeklyListAsync();
         //public Task AddToWeeklyListAsync(WeeklyReminderClass weekly); //so if i wanted to add something to the list, i can.

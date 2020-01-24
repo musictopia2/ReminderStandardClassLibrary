@@ -12,9 +12,15 @@ namespace ReminderStandardClassLibrary.Logic
             _data = data;
         }
 
-        protected override Task<ReminderModel> GetNextReminderAsync()
+        protected override Task<ReminderModel?> GetNextReminderAsync()
         {
+            //return Task.FromResult<ReminderModel?>(null);
             return _data.GetNextWeeklyReminderAsync()!;
+        }
+
+        public override Task ProcessedReminderAsync()
+        {
+            return _data.ProcessedReminderAsync();
         }
 
     }

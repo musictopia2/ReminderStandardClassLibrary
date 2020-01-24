@@ -9,7 +9,7 @@ namespace ReminderStandardClassLibrary.Interfaces
     /// but the behind the scenes must still keep working.
     /// view model is ui specific only.
     /// </summary>
-    public interface ISubReminder
+    public interface ISubReminder : IProcessedReminder
     {
         //i propose the parent view model which is always visible would be responsible for figuring out order.
 
@@ -30,7 +30,7 @@ namespace ReminderStandardClassLibrary.Interfaces
 
         DateTime? NextDate { get; }
 
-
+        
 
     }
 }
