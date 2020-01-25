@@ -13,6 +13,8 @@ namespace ReminderStandardClassLibrary.Models
         //for now, this may be okay.
         //can test the mock version.
 
+        public int HowMany { get; set; } //this is how many days or how many hours.
+
         public string Message { get; set; } = ""; //this is what needs to be done.
 
 
