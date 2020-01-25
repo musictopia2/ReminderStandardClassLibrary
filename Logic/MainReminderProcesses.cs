@@ -31,6 +31,8 @@ namespace ReminderStandardClassLibrary.Logic
         public static Action<string>? ShowNextDate { get; set; }
 
 
+        public static Func<Task>? UserCompletedAction { get; set; }
+
         //public static Action? CloseReminder { get; set; }
 
         //not sure if we need for isdisabled or not (?)
@@ -38,13 +40,38 @@ namespace ReminderStandardClassLibrary.Logic
         //private static IEventAggregator? _messenger;
         private static ICurrentDate? _dateUsed; //i like setting via dependency injection so its only set once.
 
+        private static bool _waitingForUser;
         //private static IResolver resolves;
 
         /// <summary>
         /// in the case of the bible program, when clicking, then would be set to false.
         /// no reminders can be processed while waiting for user.
         /// </summary>
-        public static bool WaitingForUser { get; set; }
+        public static bool WaitingForUser
+        {
+            get
+            {
+                return _waitingForUser;
+            }
+            set
+            {
+                if (_waitingForUser == false && value == false)
+                {
+                    return;
+                }
+                if (value == true)
+                {
+                    _waitingForUser = true;
+                    return;
+                }
+                _waitingForUser = false;
+                if (UserCompletedAction == null)
+                {
+                    throw new BasicBlankException("No action can be invoked for waiting for user because nothing registered.  Rethink");
+                }
+                UserCompletedAction.Invoke();
+            }
+        }
 
         public static void AddReminder(ISubReminder reminder)
         {
@@ -71,7 +98,7 @@ namespace ReminderStandardClassLibrary.Logic
                 ShowNextDate?.Invoke(reminder.NextDate!.Value.ToString());
             });
         }
-        private async static Task RecalculateRemindersAsync()
+        public async static Task RecalculateRemindersAsync()
         {
             foreach (var rr in _reminderList)
             {
@@ -79,7 +106,7 @@ namespace ReminderStandardClassLibrary.Logic
             }
             Refresh();
         }
-        public static async Task InitAsync()
+        public static async Task InitAsync() //this the exception worked.
         {
             //the shell view model will do this.
             _dateUsed = Resolve<ICurrentDate>();
@@ -88,8 +115,8 @@ namespace ReminderStandardClassLibrary.Logic
                 AutoReset = false
             };
             _timer.Elapsed += OnTimerElapsed;
-            await RecalculateRemindersAsync();
             _resolver = cons;
+            await RecalculateRemindersAsync();
 
 
 
@@ -98,21 +125,24 @@ namespace ReminderStandardClassLibrary.Logic
             //did not need async for this part.
         }
 
-        private static void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        private async static void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             if (_currentPopUp != null || WaitingForUser)
             {
                 return;
             }
-            //_timer!.Enabled = false;
-            Execute.OnUIThreadAsync(RunProcessAsync);
+            try
+            {
+                await Execute.OnUIThreadAsync(RunProcessAsync);
+            }
+            catch (TaskCanceledException)
+            {
+                return;
+            }
         }
         private static IResolver? _resolver;
         private static async Task RunProcessAsync()
         {
-            
-
-
             foreach (var rr in _reminderList)
             {
 
@@ -161,11 +191,14 @@ namespace ReminderStandardClassLibrary.Logic
 
         private static async Task CurrentPopupClosed()
         {
+
             ClosePopups();
             await _currentReminder!.CloseReminderAsync(await _dateUsed!.GetCurrentDateAsync());
             //CloseReminder?.Invoke();
             await RecalculateRemindersAsync();
             ContinueChecking();
+
+            
         }
         private static void ContinueChecking()
         {

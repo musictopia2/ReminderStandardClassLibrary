@@ -1,37 +1,88 @@
-﻿using CommonBasicStandardLibraries.Exceptions;
+﻿using AndyCristinaBibleStudyCPLibrary.DataAccess;
+using CommonBasicStandardLibraries.Exceptions;
+using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
 namespace ReminderStandardClassLibrary.Logic
 {
-    public abstract class BasicSubReminderProcesses : ISubReminder
+    public abstract class BasicSubReminderProcesses : ISubReminder, IAdjustNextDate
     {
-        public BasicSubReminderProcesses()
+        private bool _started = false;
+        public BasicSubReminderProcesses(IProcessedReminder processed, ISnoozeDataAccess snoozeData)
         {
-            MainReminderProcesses.AddReminder(this);
+            _processed = processed;
+            _snoozeData = snoozeData;
+            InitAsync();
+            //FinishInitAsync().Wait();
         }
+        private async void InitAsync()
+        {
+
+            MainReminderProcesses.AddReminder(this);
+            _nextReminder = await _snoozeData.GetSnoozedReminderAsync(ToString()); //can be null if there was nothing
+            if (_nextReminder != null)
+            {
+                Snoozing = true;
+                NextDate = _nextReminder.NextDate; //i think.
+            }
+            _started = true;
+            //at this point needs to refresh.
+
+        }
+        public BasicSubReminderProcesses(ISnoozeDataAccess snoozeData)
+        {
+            _snoozeData = snoozeData;
+            InitAsync();
+        }
+
         public bool ShowSounds { get; set; } = true; //default is true.
         public int HowOftenToRepeat { get; set; } = 10;
         public DateTime? NextDate { get; private set; }
-        protected bool Snoozing = false;
+        protected bool Snoozing;
         private ReminderModel? _nextReminder;
-        public virtual Task CloseReminderAsync(DateTime currentDate)
+        private readonly IProcessedReminder? _processed;
+        private readonly ISnoozeDataAccess _snoozeData;
+
+        public virtual async Task CloseReminderAsync(DateTime currentDate)
         {
+            if (Snoozing)
+            {
+                await _snoozeData.DeleteSnoozeAsync(ToString()); //i like the tostring being the key.
+            }
+
             Snoozing = false;
             //for weekly reminders, does not care.
             //however, can be overrided if necessary.
-            return Task.CompletedTask;
         }
+
 
         public Task SnoozeAsync(TimeSpan time, DateTime currentDate)
         {
-            Snoozing = true;
+
             NextDate = currentDate.Add(time);
-            return Task.CompletedTask;
+            if (_nextReminder == null)
+            {
+                throw new BasicBlankException("There was no next reminder to even save.  Rethink");
+            }
+            if (Snoozing)
+            {
+                return _snoozeData.UpdateSnooozeAsync(ToString(), NextDate.Value);
+            }
+            else
+            {
+                Snoozing = true;
+
+                return _snoozeData.SaveSnoozeAsync(ToString(), _nextReminder, NextDate.Value);
+
+            }
+            //if (Snoozing)
+            //{
+
+            //    await _snoozeData.DeleteSnoozeAsync(ToString()); //because brand new one.
+            //}
         }
         /// <summary>
         /// this will run the custom processes to see what reminder is next.
@@ -53,6 +104,18 @@ namespace ReminderStandardClassLibrary.Logic
 
         public virtual async Task<(bool needsReminder, string title, string message)> GetReminderInfoAsync(DateTime currentDate)
         {
+            if (_started == false)
+            {
+                do
+                {
+                    if (_started)
+                    {
+                        break;
+                    }
+                    await Task.Delay(10);
+                } while (true);
+                //return (false, "", ""); //because not finished yet.
+            }
             if (Snoozing == false)
             {
                 //_nextReminder = null;
@@ -77,17 +140,90 @@ namespace ReminderStandardClassLibrary.Logic
                     throw new BasicBlankException("Next date cannot be null when snoozing.  Rethink");
                 }
             }
-            if (_nextReminder !=null && currentDate >= NextDate)
+            if (_nextReminder != null && currentDate >= NextDate)
             {
                 return (true, _nextReminder.Title, _nextReminder.Message);
             }
             return (false, "", "");
 
         }
-
+        //i see lots of repeating.
         public virtual Task ProcessedReminderAsync()
         {
-            return Task.CompletedTask;
+            if (_processed == null)
+            {
+                return Task.CompletedTask;
+            }
+            return _processed.ProcessedReminderAsync();
+        }
+
+        protected async Task AdjustMinutesAsync(int minutes)
+        {
+            if (Snoozing)
+            {
+                //await _snoozeData.DeleteSnoozeAsync(ToString()); //i think its best to just delete the previous one if any.
+                //i think just add to the snooze.
+                if (NextDate == null)
+                {
+                    throw new BasicBlankException("Can't adjust minutes for snooze because next date is null.  Rethink");
+                }
+                NextDate = NextDate.Value.AddMinutes(minutes);
+                await _snoozeData.UpdateSnooozeAsync(ToString(), NextDate.Value);
+                MainReminderProcesses.Refresh();
+                return;
+            }
+            _nextReminder = await GetNextReminderAsync();
+            //must check for next one first.
+            if (_nextReminder == null)
+            {
+                throw new BasicBlankException("Can't snooze minutes because no reminder.  Rethink");
+            }
+            Snoozing = true;
+            NextDate = _nextReminder.NextDate.AddMinutes(minutes);
+            await _snoozeData.SaveSnoozeAsync(ToString(), _nextReminder, NextDate.Value);
+            MainReminderProcesses.Refresh();
+        }
+
+        Task IAdjustNextDate.AdjustMinutesAsync(int minutes)
+        {
+            return AdjustMinutesAsync(minutes);
+        }
+
+        protected async Task AdjustTimeAsync(DateTime time)
+        {
+            DateTime tempDate;
+            if (Snoozing)
+            {
+                //await _snoozeData.DeleteSnoozeAsync(ToString()); //i think its best to just delete the previous one if any.
+                //i think just add to the snooze.
+                if (NextDate == null)
+                {
+                    throw new BasicBlankException("Can't adjust minutes for snooze because next date is null.  Rethink");
+                }
+                tempDate = NextDate.Value;
+                //NextDate = NextDate.Value.AddMinutes(minutes);
+                NextDate = new DateTime(tempDate.Year, tempDate.Month, tempDate.Day, time.Hour, time.Minute, 0);
+                await _snoozeData.UpdateSnooozeAsync(ToString(), NextDate.Value);
+                MainReminderProcesses.Refresh();
+                return;
+            }
+            _nextReminder = await GetNextReminderAsync();
+            //must check for next one first.
+            if (_nextReminder == null)
+            {
+                throw new BasicBlankException("Can't snooze minutes because no reminder.  Rethink");
+            }
+            Snoozing = true;
+            NextDate = _nextReminder.NextDate;
+            tempDate = NextDate.Value;
+            NextDate = new DateTime(tempDate.Year, tempDate.Month, tempDate.Day, time.Hour, time.Minute, 0);
+            await _snoozeData.SaveSnoozeAsync(ToString(), _nextReminder, NextDate.Value);
+            MainReminderProcesses.Refresh();
+        }
+
+        Task IAdjustNextDate.AdjustTimeAsync(DateTime time)
+        {
+            return AdjustTimeAsync(time);
         }
     }
 }
