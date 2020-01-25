@@ -1,17 +1,6 @@
-﻿using System;
-using System.Text;
-using CommonBasicStandardLibraries.Exceptions;
-using CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.BasicExtensions;
-using System.Linq;
-using CommonBasicStandardLibraries.BasicDataSettingsAndProcesses;
-using static CommonBasicStandardLibraries.BasicDataSettingsAndProcesses.BasicDataFunctions;
-using CommonBasicStandardLibraries.CollectionClasses;
-using System.Threading.Tasks; //most of the time, i will be using asyncs.
-using fs = CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.FileHelpers;
-using js = CommonBasicStandardLibraries.AdvancedGeneralFunctionsAndProcesses.JsonSerializers.NewtonJsonStrings; //just in case i need those 2.
+﻿using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Models;
-using ReminderStandardClassLibrary.Interfaces;
-using ReminderStandardClassLibrary.DataAccess;
+using System.Threading.Tasks; //most of the time, i will be using asyncs.
 //i think this is the most common things i like to do
 namespace ReminderStandardClassLibrary.Logic
 {
@@ -21,14 +10,16 @@ namespace ReminderStandardClassLibrary.Logic
     /// </summary>
     public class TemporaryReoccuringReminderProcesses : BasicSubReminderProcesses
     {
+        private readonly ITemporaryReoccuringDataAccess _data;
 
-        public TemporaryReoccuringReminderProcesses(IProcessedReminder processed, ISnoozeDataAccess snoozeData) : base(processed, snoozeData)
+        public TemporaryReoccuringReminderProcesses(ITemporaryReoccuringDataAccess data, ISnoozeDataAccess snoozeData) : base(data, snoozeData)
         {
+            _data = data;
         }
 
         protected override Task<ReminderModel?> GetNextReminderAsync()
         {
-            throw new NotImplementedException();
+            return _data.GetNextTemporaryReoccuringReminderAsync();
         }
     }
 }
