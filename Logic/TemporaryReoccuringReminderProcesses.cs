@@ -17,7 +17,7 @@ namespace ReminderStandardClassLibrary.Logic
             _data = data;
         }
 
-        protected override Task<ReminderModel?> GetNextReminderAsync()
+        public override Task<ReminderModel?> GetNextReminderAsync()
         {
             return _data.GetNextTemporaryReoccuringReminderAsync();
         }

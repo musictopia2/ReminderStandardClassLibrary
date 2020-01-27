@@ -21,7 +21,7 @@ namespace ReminderStandardClassLibrary.Logic
 
 
 
-        protected override Task<ReminderModel?> GetNextReminderAsync()
+        public override Task<ReminderModel?> GetNextReminderAsync()
         {
             //return Task.FromResult<ReminderModel?>(null);
             return _data.GetNextWeeklyReminderAsync()!;

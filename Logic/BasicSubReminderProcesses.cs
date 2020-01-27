@@ -92,7 +92,10 @@ namespace ReminderStandardClassLibrary.Logic
         //protected abstract Task CheckListsAsync();
 
 
-        protected abstract Task<ReminderModel?> GetNextReminderAsync();
+        //decided to make it public so any of the individual screens can know when the next reminder is.  if none is found, then can act accordingly as well.
+
+
+        public abstract Task<ReminderModel?> GetNextReminderAsync();
 
         //this means if i need something else, can do.
         //hopefully i don't regret the part for next reminder.
