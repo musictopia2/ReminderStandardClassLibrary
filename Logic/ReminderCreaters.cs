@@ -9,6 +9,40 @@ namespace ReminderStandardClassLibrary.Logic
     public static class ReminderCreaters
     {
 
+        public static void AppendSameDayReminders(CustomBasicList<ReminderModel> reminders, CustomBasicList<SameDayModel> days)
+        {
+            days.ForEach(d => AppendSameDayReminder(reminders, d));
+        }
+
+        public static void AppendSameDayReminder(CustomBasicList<ReminderModel> reminders, SameDayModel day)
+        {
+            //this is easier this time.
+
+
+            ReminderModel reminder = new ReminderModel()
+            {
+                NextDate = day.ReminderDate,
+                Title = day.Title
+            };
+            reminders.Add(reminder);
+
+            //DateTime nextDate = appointment.AppointmentDate;
+
+            //DateTime time = DateTime.Parse(appointment.ReminderTime);
+
+            //DateTime remindDate = new DateTime(nextDate.Year, nextDate.Month, nextDate.Day, time.Hour, time.Minute, 0);
+            //if (remindDate > currentDate)
+            //{
+            //    ReminderModel reminder = new ReminderModel()
+            //    {
+            //        Message = appointment.Title,
+            //        NextDate = remindDate
+            //    };
+            //    reminders.Add(reminder);
+            //}
+        }
+
+
         public static void AppendAppointments(CustomBasicList<ReminderModel> reminders, CustomBasicList<AppointmentModel> appointments, DateTime currentDate)
         {
             appointments.ForEach(a => AppendNewAppointment(reminders, a, currentDate));
