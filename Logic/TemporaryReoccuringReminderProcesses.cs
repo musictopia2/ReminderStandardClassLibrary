@@ -1,4 +1,5 @@
-﻿using ReminderStandardClassLibrary.DataAccess;
+﻿using CommonBasicStandardLibraries.Messenging;
+using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Models;
 using System.Threading.Tasks; //most of the time, i will be using asyncs.
 //i think this is the most common things i like to do
@@ -12,7 +13,7 @@ namespace ReminderStandardClassLibrary.Logic
     {
         private readonly ITemporaryReoccuringDataAccess _data;
 
-        public TemporaryReoccuringReminderProcesses(ITemporaryReoccuringDataAccess data, ISnoozeDataAccess snoozeData) : base(data, snoozeData)
+        public TemporaryReoccuringReminderProcesses(ITemporaryReoccuringDataAccess data, ISnoozeDataAccess snoozeData, IEventAggregator aggregator) : base(data, snoozeData, aggregator)
         {
             _data = data;
         }

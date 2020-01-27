@@ -1,20 +1,21 @@
 ﻿using AndyCristinaBibleStudyCPLibrary.DataAccess;
 using CommonBasicStandardLibraries.Exceptions;
+using CommonBasicStandardLibraries.Messenging;
 using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 namespace ReminderStandardClassLibrary.Logic
 {
     public abstract class BasicSubReminderProcesses : ISubReminder, IAdjustNextDate
     {
         private bool _started = false;
-        public BasicSubReminderProcesses(IProcessedReminder processed, ISnoozeDataAccess snoozeData)
+        public BasicSubReminderProcesses(IProcessedReminder processed, ISnoozeDataAccess snoozeData, IEventAggregator aggregator)
         {
             _processed = processed;
             _snoozeData = snoozeData;
+            _aggregator = aggregator;
             InitAsync();
             //FinishInitAsync().Wait();
         }
@@ -32,9 +33,10 @@ namespace ReminderStandardClassLibrary.Logic
             //at this point needs to refresh.
 
         }
-        public BasicSubReminderProcesses(ISnoozeDataAccess snoozeData)
+        public BasicSubReminderProcesses(ISnoozeDataAccess snoozeData, IEventAggregator aggregator)
         {
             _snoozeData = snoozeData;
+            _aggregator = aggregator;
             InitAsync();
         }
 
@@ -45,6 +47,12 @@ namespace ReminderStandardClassLibrary.Logic
         private ReminderModel? _nextReminder;
         private readonly IProcessedReminder? _processed;
         private readonly ISnoozeDataAccess _snoozeData;
+        private readonly IEventAggregator _aggregator;
+
+        protected Task RefreshAsync()
+        {
+            return _aggregator.PublishAsync(this, ToString()); //hopefully this will work.
+        }
 
         public virtual async Task CloseReminderAsync(DateTime currentDate)
         {
@@ -52,7 +60,7 @@ namespace ReminderStandardClassLibrary.Logic
             {
                 await _snoozeData.DeleteSnoozeAsync(ToString()); //i like the tostring being the key.
             }
-
+            await RefreshAsync();
             Snoozing = false;
             //for weekly reminders, does not care.
             //however, can be overrided if necessary.

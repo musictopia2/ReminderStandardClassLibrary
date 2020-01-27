@@ -1,4 +1,5 @@
-﻿using ReminderStandardClassLibrary.DataAccess;
+﻿using CommonBasicStandardLibraries.Messenging;
+using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System.Threading.Tasks; //most of the time, i will be using asyncs.
@@ -9,7 +10,7 @@ namespace ReminderStandardClassLibrary.Logic
     {
         private readonly ISimpleWeeklyDataAccess _data;
 
-        public WeeklyReminderProcesses(ISimpleWeeklyDataAccess data, ISnoozeDataAccess snoozeData) : base(data, snoozeData)
+        public WeeklyReminderProcesses(ISimpleWeeklyDataAccess data, ISnoozeDataAccess snoozeData, IEventAggregator aggregator) : base(data, snoozeData, aggregator)
         {
             _data = data;
         }

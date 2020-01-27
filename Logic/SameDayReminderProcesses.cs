@@ -1,4 +1,5 @@
-﻿using ReminderStandardClassLibrary.DataAccess;
+﻿using CommonBasicStandardLibraries.Messenging;
+using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace ReminderStandardClassLibrary.Logic
     {
         private readonly ISameDayReminderDataAccess _data;
 
-        public SameDayReminderProcesses(ISameDayReminderDataAccess data, ISnoozeDataAccess snoozeData) : base(data, snoozeData)
+        public SameDayReminderProcesses(ISameDayReminderDataAccess data, ISnoozeDataAccess snoozeData, IEventAggregator aggregator) : base(data, snoozeData, aggregator)
         {
             _data = data;
         }
