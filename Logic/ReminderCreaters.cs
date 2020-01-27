@@ -22,7 +22,7 @@ namespace ReminderStandardClassLibrary.Logic
             ReminderModel reminder = new ReminderModel()
             {
                 NextDate = day.ReminderDate,
-                Title = day.Title
+                Message = day.Title
             };
             reminders.Add(reminder);
 
