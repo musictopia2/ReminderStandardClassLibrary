@@ -13,6 +13,11 @@ namespace ReminderStandardClassLibrary.DataAccess
         //i think this could be good.
         Task<ReminderModel?> GetNextWeeklyReminderAsync();
 
+        Task AddNewWeeklyReminderAsync(WeeklyReminderModel model);
+        Task<CustomBasicList<WeeklyReminderModel>> GetWeeklyReminderListAsync();
+        Task DeleteWeeklyReminderAsync(WeeklyReminderModel model);
+        Task UpdateWeeklyReminderAsync(WeeklyReminderModel model);
+
 
         //public Task<CustomBasicList<WeeklyReminderClass>> GetWeeklyListAsync();
         //public Task AddToWeeklyListAsync(WeeklyReminderClass weekly); //so if i wanted to add something to the list, i can.

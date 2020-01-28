@@ -1,4 +1,5 @@
-﻿using ReminderStandardClassLibrary.Interfaces;
+﻿using CommonBasicStandardLibraries.CollectionClasses;
+using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,9 @@ namespace ReminderStandardClassLibrary.DataAccess
     public interface ISameDayReminderDataAccess : IProcessedReminder
     {
         Task<ReminderModel?> GetNextReminderAsync();
+        Task AddNewSameDayReminderAsync(SameDayModel model);
+        Task<CustomBasicList<SameDayModel>> GetSameDayReminderListAsync();
+        Task DeleteSameDayReminderAsync(SameDayModel model);
+        Task UpdateSameDayReminderAsync(SameDayModel model);
     }
 }
