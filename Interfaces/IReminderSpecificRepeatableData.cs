@@ -1,4 +1,4 @@
-﻿using static CommonBasicStandardLibraries.MVVMFramework.CustomValidationClasses.CustomTimeAttribute;
+﻿using ReminderStandardClassLibrary.MiscClasses;
 namespace ReminderStandardClassLibrary.Interfaces
 {
 	public interface IReminderSpecificRepeatableData : IReminderBasicData //refilling water will use this

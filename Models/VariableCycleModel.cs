@@ -1,4 +1,5 @@
-﻿using static CommonBasicStandardLibraries.MVVMFramework.CustomValidationClasses.CustomTimeAttribute;
+﻿using ReminderStandardClassLibrary.MiscClasses;
+using static CommonBasicStandardLibraries.MVVMFramework.CustomValidationClasses.CustomTimeAttribute;
 namespace ReminderStandardClassLibrary.Models
 {
 	public class VariableCycleModel

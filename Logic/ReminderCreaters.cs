@@ -1,8 +1,8 @@
 ﻿using CommonBasicStandardLibraries.CollectionClasses;
 using CommonBasicStandardLibraries.Exceptions;
+using ReminderStandardClassLibrary.MiscClasses;
 using ReminderStandardClassLibrary.Models;
 using System;
-using static CommonBasicStandardLibraries.MVVMFramework.CustomValidationClasses.CustomTimeAttribute;
 
 namespace ReminderStandardClassLibrary.Logic
 {
@@ -72,7 +72,7 @@ namespace ReminderStandardClassLibrary.Logic
         {
             DateTime tryDate;
             tryDate = activity.StartDate;
-            
+
             do
             {
                 //has to do at least one time.
@@ -112,7 +112,7 @@ namespace ReminderStandardClassLibrary.Logic
                 {
                     return;
                 }
-               
+
 
             } while (true);
         }
