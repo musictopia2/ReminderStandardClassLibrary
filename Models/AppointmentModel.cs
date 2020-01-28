@@ -9,5 +9,9 @@ namespace ReminderStandardClassLibrary.Models
         public string Notes { get; set; } = ""; //this is the notes
         public DateTime AppointmentDate { get; set; } //this is the date of the appointment.
         public string ReminderTime { get; set; } = ""; //decided that time should be separate field.
+        public override string ToString()
+        {
+            return $"{Title} on {AppointmentDate.ToShortDateString()}.  Reminder at {ReminderTime} ";
+        }
     }
 }
