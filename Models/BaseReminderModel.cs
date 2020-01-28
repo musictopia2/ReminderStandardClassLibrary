@@ -1,5 +1,4 @@
 ﻿using CommonBasicStandardLibraries.MVVMFramework.ViewModels;
-using ReminderStandardClassLibrary.GeneralViewModels;
 using System;
 namespace ReminderStandardClassLibrary.Models
 {
