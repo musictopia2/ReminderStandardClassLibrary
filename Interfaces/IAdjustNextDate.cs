@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-namespace AndyCristinaBibleStudyCPLibrary.DataAccess
+namespace ReminderStandardClassLibrary.Interfaces
 {
     /// <summary>
     /// this is when i am adjusting when something can be done again.
     /// at first, will be the minutes part of it.
     /// however, will eventually have another method that would show the time in text form like 9:30 AM, etc.
+    /// 
+    /// this had to be in main reminder since its not just for the bible.
     /// </summary>
     public interface IAdjustNextDate
     {

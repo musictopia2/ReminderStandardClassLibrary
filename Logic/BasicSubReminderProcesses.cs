@@ -1,5 +1,4 @@
-﻿using AndyCristinaBibleStudyCPLibrary.DataAccess;
-using CommonBasicStandardLibraries.Exceptions;
+﻿using CommonBasicStandardLibraries.Exceptions;
 using CommonBasicStandardLibraries.Messenging;
 using ReminderStandardClassLibrary.DataAccess;
 using ReminderStandardClassLibrary.Interfaces;
