@@ -70,6 +70,7 @@ namespace ReminderStandardClassLibrary.Logic
                     throw new BasicBlankException("No action can be invoked for waiting for user because nothing registered.  Rethink");
                 }
                 UserCompletedAction.Invoke();
+                _timer!.Start(); //i think we can now start the timer again.
             }
         }
 

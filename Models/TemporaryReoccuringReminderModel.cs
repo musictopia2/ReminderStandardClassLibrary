@@ -1,6 +1,6 @@
 ﻿using CommonBasicStandardLibraries.DatabaseHelpers.EntityInterfaces;
+using ReminderStandardClassLibrary.MiscClasses;
 using System;
-using static CommonBasicStandardLibraries.MVVMFramework.CustomValidationClasses.CustomTimeAttribute;
 namespace ReminderStandardClassLibrary.Models
 {
     public class TemporaryReoccuringReminderModel : ISimpleDapperEntity
