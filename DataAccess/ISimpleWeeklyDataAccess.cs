@@ -11,7 +11,7 @@ namespace ReminderStandardClassLibrary.DataAccess
         //looks like i need the entire weekly list.
 
         //i think this could be good.
-        public Task<ReminderModel?> GetNextWeeklyReminderAsync();
+        Task<ReminderModel?> GetNextWeeklyReminderAsync();
 
 
         //public Task<CustomBasicList<WeeklyReminderClass>> GetWeeklyListAsync();

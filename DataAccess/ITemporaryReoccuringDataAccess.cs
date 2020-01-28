@@ -5,6 +5,6 @@ namespace ReminderStandardClassLibrary.DataAccess
 {
     public interface ITemporaryReoccuringDataAccess : IProcessedReminder
     {
-        public Task<ReminderModel?> GetNextTemporaryReoccuringReminderAsync();
+        Task<ReminderModel?> GetNextTemporaryReoccuringReminderAsync();
     }
 }

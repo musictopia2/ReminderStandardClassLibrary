@@ -6,6 +6,6 @@ namespace ReminderStandardClassLibrary.DataAccess
 {
     public interface IAppointmentDataAccess : IProcessedReminder
     {
-        public Task<ReminderModel?> GetNextAppointmentReminderAsync();
+        Task<ReminderModel?> GetNextAppointmentReminderAsync();
     }
 }

@@ -12,6 +12,6 @@ namespace ReminderStandardClassLibrary.DataAccess
     /// </summary>
     public interface ISameDayReminderDataAccess : IProcessedReminder
     {
-        public Task<ReminderModel?> GetNextReminderAsync();
+        Task<ReminderModel?> GetNextReminderAsync();
     }
 }
