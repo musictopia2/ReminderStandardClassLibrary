@@ -1,13 +1,14 @@
 ﻿using CommonBasicStandardLibraries.Exceptions;
 using CommonBasicStandardLibraries.Messenging;
 using ReminderStandardClassLibrary.DataAccess;
+using ReminderStandardClassLibrary.EventModels;
 using ReminderStandardClassLibrary.Interfaces;
 using ReminderStandardClassLibrary.Models;
 using System;
 using System.Threading.Tasks;
 namespace ReminderStandardClassLibrary.Logic
 {
-    public abstract class BasicSubReminderProcesses : ISubReminder, IAdjustNextDate
+    public abstract class BasicSubReminderProcesses : ISubReminder, IAdjustNextDate, IHandleAsync<ReminderUpdatedEventModel>
     {
         private bool _started = false;
         public BasicSubReminderProcesses(IProcessedReminder processed, ISnoozeDataAccess snoozeData, IEventAggregator aggregator)
@@ -15,6 +16,7 @@ namespace ReminderStandardClassLibrary.Logic
             _processed = processed;
             _snoozeData = snoozeData;
             _aggregator = aggregator;
+            _aggregator.Subscribe(this, ToString());
             InitAsync();
             //FinishInitAsync().Wait();
         }
@@ -234,6 +236,13 @@ namespace ReminderStandardClassLibrary.Logic
         Task IAdjustNextDate.AdjustTimeAsync(DateTime time)
         {
             return AdjustTimeAsync(time);
+        }
+
+        async Task IHandleAsync<ReminderUpdatedEventModel>.HandleAsync(ReminderUpdatedEventModel message)
+        {
+            //this means needs to refresh.
+            await RefreshAsync(); //hopefully this simple (?)
+            MainReminderProcesses.Refresh();
         }
     }
 }
