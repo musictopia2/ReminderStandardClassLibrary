@@ -16,7 +16,7 @@ namespace ReminderStandardClassLibrary.Logic
             _processed = processed;
             _snoozeData = snoozeData;
             _aggregator = aggregator;
-            _aggregator.Subscribe(this, ToString());
+            _aggregator.Subscribe(this, _processed.ToString()); //try this one.
             InitAsync();
             //FinishInitAsync().Wait();
         }
