@@ -4,5 +4,4 @@
 	{
 		None, WaitingForReminder, WaitingForUser
 	}
-	
 }

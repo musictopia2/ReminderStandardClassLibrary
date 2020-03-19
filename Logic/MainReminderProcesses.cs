@@ -13,12 +13,6 @@ namespace ReminderStandardClassLibrary.Logic
     public static class MainReminderProcesses
     {
 
-        //in the old version, the view models was doing too much.
-        //now, more it needs to be done with the business class.
-        //which view models can call into.
-        //this may have to be static.
-
-        //will deal with interfaces.
 
         static Timer? _timer;
         private static IPopUp? _currentPopUp;
@@ -26,18 +20,12 @@ namespace ReminderStandardClassLibrary.Logic
         private static readonly CustomBasicList<ISubReminder> _reminderList = new CustomBasicList<ISubReminder>();
 
         private static ISubReminder? _currentReminder;
-        //private static bool _didRefresh;
 
         public static Action<string>? ShowNextDate { get; set; }
 
 
         public static Func<Task>? UserCompletedAction { get; set; }
 
-        //public static Action? CloseReminder { get; set; }
-
-        //not sure if we need for isdisabled or not (?)
-
-        //private static IEventAggregator? _messenger;
         private static ICurrentDate? _dateUsed; //i like setting via dependency injection so its only set once.
 
         private static bool _waitingForUser;
@@ -80,9 +68,6 @@ namespace ReminderStandardClassLibrary.Logic
         }
         public static void Refresh()
         {
-            //_didRefresh = true;
-            //so if another process does something midway, it can be updated.
-            //i think this should be called manually so they don't all get messages every second (no good).
             var reminder = _reminderList.Where(x => x.NextDate.HasValue == true).OrderBy(x => x.NextDate!.Value).FirstOrDefault();
             if (reminder == null)
             {

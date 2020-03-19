@@ -5,15 +5,13 @@
     <LangVersion>8.0</LangVersion>
     <Authors>musictopia</Authors>
     <Nullable>enable</Nullable>
-    <Description>View Models For Doing Reminder Apps</Description>
-    <PackageTags>reminders viewmodels mvvm</PackageTags>
+    <Description>Interface and basic processes for reminder apps</Description>
+    <PackageTags>reminders</PackageTags>
     <PackageProjectUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/musictopia2/ReminderStandardClassLibrary</RepositoryUrl>
-    <Version>2.0.1</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonBasicStandardLibraries">
-      <HintPath>..\..\General\CommonBasicStandardLibraries\bin\Release\netstandard2.1\CommonBasicStandardLibraries.dll</HintPath>
-    </Reference>
+    <PackageReference Include="CommonBasicStandardLibraries" Version="3.0.1" />
   </ItemGroup>
 </Project>

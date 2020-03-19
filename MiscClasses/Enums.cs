@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ReminderStandardClassLibrary.MiscClasses
+﻿namespace ReminderStandardClassLibrary.MiscClasses
 {
     public enum EnumPopupMode
     {

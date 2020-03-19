@@ -16,9 +16,6 @@ namespace ReminderStandardClassLibrary.Logic
 
         public static void AppendSameDayReminder(CustomBasicList<ReminderModel> reminders, SameDayModel day)
         {
-            //this is easier this time.
-
-
             ReminderModel reminder = new ReminderModel()
             {
                 NextDate = day.ReminderDate,
@@ -26,20 +23,6 @@ namespace ReminderStandardClassLibrary.Logic
             };
             reminders.Add(reminder);
 
-            //DateTime nextDate = appointment.AppointmentDate;
-
-            //DateTime time = DateTime.Parse(appointment.ReminderTime);
-
-            //DateTime remindDate = new DateTime(nextDate.Year, nextDate.Month, nextDate.Day, time.Hour, time.Minute, 0);
-            //if (remindDate > currentDate)
-            //{
-            //    ReminderModel reminder = new ReminderModel()
-            //    {
-            //        Message = appointment.Title,
-            //        NextDate = remindDate
-            //    };
-            //    reminders.Add(reminder);
-            //}
         }
 
 
@@ -85,10 +68,6 @@ namespace ReminderStandardClassLibrary.Logic
                 {
                     reminders.Add(reminder);
                 }
-                //if (currentDate < tryDate)
-                //{
-                //    return;
-                //}
                 switch (activity.TimeMode)
                 {
                     case EnumTimeFormat.None:
@@ -119,7 +98,6 @@ namespace ReminderStandardClassLibrary.Logic
 
         public static void AppendReminders(CustomBasicList<ReminderModel> reminders, CustomBasicList<TemporaryReoccuringReminderModel> activities, DateTime currentDate)
         {
-            //CustomBasicList<ReminderModel> tempList = new CustomBasicList<ReminderModel>();
 
             foreach (var activity in activities)
             {
